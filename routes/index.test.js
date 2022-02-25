@@ -15,7 +15,7 @@ test.skip("to uppercase", async () => {
     });
 });
 
-test("sum", async () => {
+test.skip("sum", async () => {
   await request(app)
     .post("/sum")
     .send({
@@ -27,13 +27,37 @@ test("sum", async () => {
     });
 });
 
-test("get token?", async () => {
+test("saving user", async () => {
   const response = await request(app).post("/users/actions/sign-up").send({
     // ==> req.body
     firstname: "john",
     lastname: "doe",
     pseudo: "wallace",
-    password: "abc",
+    password: "abcdefg",
   });
-  expect(typeof response.body.token).toBe("string");
+  expect(typeof response.body.userFind.token).toBe("string");
+});
+
+test("password > 8 character", async () => {
+  const response = await request(app).post("/users/actions/sign-up").send({
+    // ==> req.body
+    firstname: "john",
+    lastname: "doe",
+    pseudo: "wallace",
+    password: "abcdefg",
+  });
+  expect(typeof response.body.userFind.token).toBe("string");
+});
+
+test("password < 8 character", async () => {
+  const response = await request(app)
+    .post("/users/actions/sign-up")
+    .send({
+      // ==> req.body
+      firstname: "john",
+      lastname: "doe",
+      pseudo: "wallace",
+      password: "abcdefg",
+    })
+    .expect({ result: false, error: "password must be over 8 characters" });
 });

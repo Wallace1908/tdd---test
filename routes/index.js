@@ -53,12 +53,15 @@ router.post("/users/actions/sign-up", function (req, res, next) {
 
   console.log("---userDB", userDB);
 
-  // const found = array1.find(element => element > 10);
   const userFind = userDB.find((user) => user.pseudo);
 
   console.log("---userFind", userFind);
 
-  res.json({});
+  if (req.body.password.length < 8) {
+    res.json({ result: false, error: "password must be over 8 characters" });
+  } else {
+    res.json({ userFind });
+  }
 });
 
 // sign-in
